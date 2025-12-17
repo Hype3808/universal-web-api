@@ -105,10 +105,10 @@
   "chatgpt.com": {
     "selectors": {
       "input_box": "#prompt-textarea",
-      "send_btn": ".composer-submit-button-color",
+      "send_btn": "[data-testid=\"send-button\"]",
       "result_container": ".agent-turn .markdown",
       "new_chat_btn": "[data-testid=\"create-new-chat-button\"]",
-      "message_wrapper": "[data-testid^=\"conversation-turn-\"]",
+      "message_wrapper": "article[data-testid^=\"conversation-turn-\"]",
       "generating_indicator": null
     },
     "workflow": [
@@ -248,4 +248,5 @@
       "enable_wrapper_search": true
     }
   }
+
 }
