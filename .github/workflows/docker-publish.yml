@@ -6,16 +6,21 @@ on:
     tags: ["v*"]
   workflow_dispatch:
 
-env:
-  IMAGE_NAME: ghcr.io/${{ toLower(github.repository_owner) }}/${{ github.event.repository.name }}
-
 jobs:
   build-amd64:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+    outputs:
+      owner: ${{ steps.owner.outputs.owner }}
     steps:
+      - name: Compute lowercase owner
+        id: owner
+        run: |
+          owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "owner=${owner}" >> $GITHUB_OUTPUT
+          echo "Owner lowercase: ${owner}"
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -38,7 +43,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.IMAGE_NAME }}:amd64
+          tags: ghcr.io/${{ steps.owner.outputs.owner }}/${{ github.event.repository.name }}:amd64
           platforms: linux/amd64
           cache-from: type=gha,scope=amd64
           cache-to: type=gha,scope=amd64,mode=max
@@ -50,6 +55,12 @@ jobs:
       contents: read
       packages: write
     steps:
+      - name: Compute lowercase owner
+        id: owner
+        run: |
+          owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "owner=${owner}" >> $GITHUB_OUTPUT
+          echo "Owner lowercase: ${owner}"
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -72,7 +83,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.IMAGE_NAME }}:arm64
+          tags: ghcr.io/${{ steps.owner.outputs.owner }}/${{ github.event.repository.name }}:arm64
           platforms: linux/arm64
           cache-from: type=gha,scope=arm64
           cache-to: type=gha,scope=arm64,mode=max
@@ -98,10 +109,13 @@ jobs:
 
       - name: Create multi-arch manifest
         run: |
+          IMAGE_NAME=ghcr.io/${{ needs.build-amd64.outputs.owner }}/${{ github.event.repository.name }}
           docker buildx imagetools create \
             -t ${IMAGE_NAME}:latest \
             ${IMAGE_NAME}:amd64 \
             ${IMAGE_NAME}:arm64
 
       - name: Inspect manifest
-        run: docker buildx imagetools inspect ${IMAGE_NAME}:latest
+        run: |
+          IMAGE_NAME=ghcr.io/${{ needs.build-amd64.outputs.owner }}/${{ github.event.repository.name }}
+          docker buildx imagetools inspect ${IMAGE_NAME}:latest
