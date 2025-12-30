@@ -25,6 +25,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --upgrade pip \
     && pip install -r requirements.txt
 
+COPY sites.json ./sites.json
+COPY browser_config.json ./browser_config.json
+
 COPY . .
 
 RUN chmod +x /app/docker-entrypoint.sh

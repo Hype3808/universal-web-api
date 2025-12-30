@@ -13,7 +13,6 @@ services:
       BROWSER_PORT: 9222
       CORS_ORIGINS: "*"
     volumes:
-      - ./sites.json:/app/sites.json
       - ./browser_config.json:/app/browser_config.json
       - ./chrome_profile:/app/chrome_profile
     restart: unless-stopped
