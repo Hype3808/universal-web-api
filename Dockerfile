@@ -16,7 +16,6 @@ RUN --mount=type=cache,target=/var/cache/apt \
         fonts-noto-color-emoji \
         libnss3 \
         libasound2 \
-        dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -31,7 +30,7 @@ COPY browser_config.json ./browser_config.json
 
 COPY . .
 
-RUN dos2unix /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh
+RUN sed -i 's/\r$//' /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh
 
 ENV APP_HOST=0.0.0.0 \
     APP_PORT=8199 \
