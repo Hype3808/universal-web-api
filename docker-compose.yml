@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    image: ghcr.io/hype3808/universal-web-api:latest
+    ports:
+      - "8199:8199"
+      - "9222:9222"
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8199
+      BROWSER_PORT: 9222
+      CORS_ORIGINS: "*"
+    volumes:
+      - ./sites.json:/app/sites.json
+      - ./browser_config.json:/app/browser_config.json
+      - ./chrome_profile:/app/chrome_profile
+    restart: unless-stopped

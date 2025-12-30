@@ -1,0 +1,15 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.db
+.python-version
+.env*
+.git
+.gitignore
+chrome_profile/
+node_modules/
+build/
+dist/
