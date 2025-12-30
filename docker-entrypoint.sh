@@ -12,6 +12,11 @@ export DBUS_SYSTEM_BUS_ADDRESS=unix:path=/dev/null
 
 mkdir -p /app/chrome_profile
 
+# Remove Chromium singleton lock files to avoid stale profile lock across restarts/hosts
+rm -f /app/chrome_profile/SingletonLock \
+  /app/chrome_profile/SingletonCookie \
+  /app/chrome_profile/SingletonSocket
+
 "${CHROME_BIN}" \
   --headless=new \
   --disable-gpu \
