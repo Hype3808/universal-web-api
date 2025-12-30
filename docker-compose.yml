@@ -13,6 +13,6 @@ services:
       BROWSER_PORT: 9222
       CORS_ORIGINS: "*"
     volumes:
-      - ./browser_config.json:/app/browser_config.json
+      #- ./browser_config.json:/app/browser_config.json # Uncomment to use a custom browser configuration
       - ./chrome_profile:/app/chrome_profile
     restart: unless-stopped
